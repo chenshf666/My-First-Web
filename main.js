@@ -32,16 +32,20 @@ disk.style = "background-color:blue;\
                 margin:0px;\
                 position:absolute";               
 Body.appendChild(disk);
-//rock
+//3rock
+for(var i = 0; i < 3; i++){
 var rock = document.createElement("div");
 rock.style.height="250px";
 rock.style.width ="2px";
 rock.style.backgroundColor="black";
 rock.style.position = "absolute";
 rock.style.top = "150px";
-rock.style.left = "249px";
+rock.style.left = (i*500+249)+"px";
 Body.appendChild(rock);
-
+}
+var left = new Array();
+var middle = new Array();
+var right = new Array();
 for(var i = 0; i < 10; i++){
     var diski = document.createElement("div");
     Body.appendChild(diski);
@@ -50,25 +54,29 @@ for(var i = 0; i < 10; i++){
     diski.style.left = (249 - (50*(i+1))/2)+"px";
     diski.style.top = (200 + i*20) + "px";
     Body.appendChild(diski);
+    left.push(diski);
 }
+left.reverse();
+
 //function Execute
 function Execute(){
-    var num = input_text.value;
-    var length = document.getElementsByTagName("p").length;
-    for(var i = 1; i <= num; i++){
-        var para = document.createElement("p");
-        para.innerHTML = "Hello"+(i+length);
-        Body.appendChild(para);
+    if(left.length >= 1){
+        middle.push(left.pop());
+        middle[middle.length - 1].style.top = 
+         (380 - 20 *(middle.length - 1)) + "px";
+        middle[middle.length - 1].style.left =
+          (749 - stringPXtoNum(middle[middle.length - 1].style.width)/2)+"px";
     }
 }
 
 //function Delete
 function Delete(){
-    var obj = document.getElementsByTagName("p")[0];
-  
-    while(obj != null && obj != undefined){
-        obj.parentNode.removeChild(obj); 
-        var obj = document.getElementsByTagName("p")[0];
+    if(middle.length >=1){
+        left.push(middle.pop());
+        var last = left.length - 1;
+        var Style = left[last].style;
+        Style.top = (380 - 20*last)+"px";
+        Style.left = (249 - stringPXtoNum(Style.width)/2) + "px";
     }
 }
 
@@ -85,3 +93,13 @@ function cloneObj(obj1,obj2) {
 版权声明：本文为博主原创文章，转载请附上博文链接！
 由chenshf666修改为可以赋值的函数，而并非复制函数，用于同类型
 */
+
+function stringPXtoNum(str){
+    var num = 0;
+    var tmp ="0";
+    var base = tmp.charCodeAt(0);
+    for(var i = 0; i < str.length - 2; i++){
+        num = num*10 + str.charCodeAt(i)-base;
+    }
+    return num;
+}
