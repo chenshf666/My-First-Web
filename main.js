@@ -1,26 +1,20 @@
-var input_text = document.createElement("input");
+var input_text = document.createElement("select");
 var input_button = document.createElement("input");
-var input_del = document.createElement("input");
 var Body = document.getElementsByTagName("body")[0];
 
 //the number of hano town
-input_text.type = "number";
-input_text.max = "20";
-input_text.min = "1";
-input_text.step = "1";
-input_text.value = "10";
 input_text.style ="margin-left:100px;margin-top:100px;";
+for(var i = 1; i <= 10; i++){
+    input_text.add(new Option(i.toString(),i.toString()));
+}
 Body.appendChild(input_text);
+
 //commit button
 input_button.type ="button";
 input_button.value = "Execute";
 input_button.addEventListener("click",Execute);
 Body.appendChild(input_button);
-//button delete
-input_del.type ="button";
-input_del.value = "Delete";
-input_del.addEventListener("click",Delete);
-Body.appendChild(input_del);
+
 
 //standard disk
 var disk = document.createElement("div");
@@ -32,51 +26,58 @@ disk.style = "background-color:blue;\
                 margin:0px;\
                 position:absolute";               
 Body.appendChild(disk);
+
 //3rock
 for(var i = 0; i < 3; i++){
-var rock = document.createElement("div");
-rock.style.height="250px";
-rock.style.width ="2px";
-rock.style.backgroundColor="black";
-rock.style.position = "absolute";
-rock.style.top = "150px";
-rock.style.left = (i*500+249)+"px";
-Body.appendChild(rock);
+    var rock = document.createElement("div");
+    rock.style.height="250px";
+    rock.style.width ="2px";
+    rock.style.backgroundColor="black";
+    rock.style.position = "absolute";
+    rock.style.top = "150px";
+    rock.style.left = (i*500+249)+"px";
+    Body.appendChild(rock);
 }
-var left = new Array();
-var middle = new Array();
-var right = new Array();
-for(var i = 0; i < 10; i++){
-    var diski = document.createElement("div");
-    Body.appendChild(diski);
-    cloneObj(diski.style,disk.style);
-    diski.style.width = (48 + 50*i)+"px";
-    diski.style.left = (249 - (50*(i+1))/2)+"px";
-    diski.style.top = (200 + i*20) + "px";
-    Body.appendChild(diski);
-    left.push(diski);
-}
-left.reverse();
+var left = [];
+var middle = [500];
+var right = [1000];
 
+var from = [];
+var to = [];
+var position = 0;
+setInterval(draw,500);
 //function Execute
 function Execute(){
-    if(left.length >= 1){
-        middle.push(left.pop());
-        middle[middle.length - 1].style.top = 
-         (380 - 20 *(middle.length - 1)) + "px";
-        middle[middle.length - 1].style.left =
-          (749 - stringPXtoNum(middle[middle.length - 1].style.width)/2)+"px";
+	if(position <= from.length - 1)
+		return;
+    Delete();
+    var count = parseInt(input_text.value);
+    for(var i = 0; i < count; i++){
+        var diski = document.createElement("div");
+        Body.appendChild(diski);
+        cloneObj(diski.style,disk.style);
+        diski.style.width = (48 + 50*i)+"px";
+        diski.style.left = (249 - (50*(i+1))/2)+"px";
+        diski.style.top = (200+(10-count)*20 + i*20) + "px";
+        Body.appendChild(diski);
+        left.push(diski);
     }
+    left.push(0);
+    left.reverse();
+    hanoi(parseInt(input_text.value),left,middle,right);
 }
 
 //function Delete
 function Delete(){
-    if(middle.length >=1){
-        left.push(middle.pop());
-        var last = left.length - 1;
-        var Style = left[last].style;
-        Style.top = (380 - 20*last)+"px";
-        Style.left = (249 - stringPXtoNum(Style.width)/2) + "px";
+    var count = right.length - 1;
+    for(var i = 0; i < count; i++)
+        Body.removeChild(right.pop());
+    if(left.length == 1)
+        left.pop();
+    position = 0;
+    while(from.length >= 1){
+    	from.pop();
+    	to.pop();
     }
 }
 
@@ -86,13 +87,7 @@ function cloneObj(obj1,obj2) {
         obj1[key] = typeof val === 'object' ? cloneObj(obj1[key],val): val;
     }
 }
-/*--------------------- 
-作者：山外人家 
-来源：CSDN 
-原文：https://blog.csdn.net/liyujia6636/article/details/52198128 
-版权声明：本文为博主原创文章，转载请附上博文链接！
-由chenshf666修改为可以赋值的函数，而并非复制函数，用于同类型
-*/
+
 
 function stringPXtoNum(str){
     var num = 0;
@@ -103,3 +98,44 @@ function stringPXtoNum(str){
     }
     return num;
 }
+
+function hanoi(n,left,middle,right){
+    if( n > 1){
+    hanoi(n-1,left,right,middle);
+    hanoi(1,left,middle,right);
+    hanoi(n-1,middle,left,right);
+    }
+    else{
+        /*right.push(left.pop());
+        var last = right.length - 1;
+        var Style = right[last].style;
+        Style.top = (380 - 20*(last-1))+"px";
+        Style.left = (249+right[0] - stringPXtoNum(Style.width)/2) + "px";
+        */
+        from.push(left);
+        to.push(right);
+    }
+}
+
+//第一种，使用while循环
+function sleep(delay) {
+    console.log(50);
+    var start = (new Date()).getTime();
+    while((new Date()).getTime() - start < delay) {
+        continue;
+    }
+}
+
+function draw(){
+	if(position < from.length){
+		var left = from[position];
+		var right = to[position];
+		right.push(left.pop());
+	    var last = right.length - 1;
+	    var Style = right[last].style;
+	    Style.top = (380 - 20*(last-1))+"px";
+	    Style.left = (249+right[0] - stringPXtoNum(Style.width)/2) + "px";
+	    position++;
+	}
+}
+
