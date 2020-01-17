@@ -1,14 +1,41 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Second project</title>
-    <meta name="author" content="chenshf">
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="1.css">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <title>Three框架</title>
+        <script src="src/game.js"></script>
+        <style type="text/css">
+        </style>
 
-<body>
-	<script src="main.js"></script>
-</body>
+    </head>
 
+    <body">
+        <canvas id="myCanvas" width="1000" height="500"></canvas>
+        <script>
+        	var c=document.getElementById("myCanvas");
+			var ctx=c.getContext("2d");
+			var img=new Image()
+			img.src="images/bird.png"
+			
+			const tempCanvas = document.createElement('canvas'); // 新建一个 canvas 作为缓存 canvas
+			const tempCtx = tempCanvas.getContext('2d');
+			tempCanvas.width = 1000; tempCanvas.height = 500; // 设置宽高
+
+			var i = 0, j = 0;
+			function showBird(){
+				i = (i+1)%12
+				j = (j+5)%500;
+
+
+				tempCtx.clearRect(0,0,1001,501)
+				tempCtx.drawImage(img,0,Math.ceil(i/4)*60,86,60,j,0,86,60);
+				
+				ctx.clearRect(0,0,1001,501)
+				ctx.drawImage(tempCanvas,0,0)
+				window.requestAnimationFrame(showBird);
+			}
+			
+			img.onload = showBird
+        </script>
+    </body>
 </html>
