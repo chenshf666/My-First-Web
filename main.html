@@ -16,20 +16,19 @@
 			var ctx=c.getContext("2d");
 			var img=new Image()
 			img.src="images/bird.png"
-			
+
 			const tempCanvas = document.createElement('canvas'); // 新建一个 canvas 作为缓存 canvas
 			const tempCtx = tempCanvas.getContext('2d');
 			tempCanvas.width = 1000; tempCanvas.height = 500; // 设置宽高
 
 			var i = 0, j = 0;
 			function showBird(){
-				i = 0;
+				i = (i+1)%36;
 				j = (j+5)%500;
 
 
 				tempCtx.clearRect(0,0,1001,501)
-				tempCtx.drawImage(img,0,Math.ceil(i/4)*60,86,60,j,0,86,60);
-				
+				tempCtx.drawImage(img,0,parseInt(i/12)*60,86,60,j,0,86,60);
 				ctx.clearRect(0,0,1001,501)
 				ctx.drawImage(tempCanvas,0,0)
 				window.requestAnimationFrame(showBird);
