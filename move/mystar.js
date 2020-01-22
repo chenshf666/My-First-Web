@@ -20,7 +20,7 @@ function paint_star(){
 	var ctx = canvas.getContext('2d');
 	var w = canvas.width = window.innerWidth;
 	var h = canvas.height = window.innerHeight;
-	var radius = Math.sqrt(w*w/4+h*h/4);
+	var radius = h/8;
 	var stars = [];
 	var x = w/2, y = h/2;
 
@@ -39,15 +39,12 @@ function paint_star(){
 			return Math.round(Math.random()*(min-max+1)+max);
 	}
 
-	function random_choice(l){
-		
-	}
-
 	var Star = function(){
 		this.x = random(w/2 - radius, w/2 + radius);
 		this.y = random(h/2 - radius, h/2 + radius);
 		var r = random(0,255), g = random(0,255), b = random(0,255);
 		this.style = 'rgb('+r+','+g+','+b+')';
+		this.mother = Math.floor(Math.random()*stars.length);
 		stars.push(this);
 	};
 
@@ -68,11 +65,16 @@ function paint_star(){
 			return 0;
 		}else if(y == 0 && x < 0){
 			return Math.PI;
+		}else{
+			return 0;
 		}
 	}
+
 	Star.prototype.draw = function(){
 		ctx.fillStyle = this.style;
-		var delta_x = this.x-x, delta_y = this.y-y;
+		var x = stars[this.mother].x;
+		var y = stars[this.mother].y;
+		var delta_x = this.x - x, delta_y = this.y - y;
 		var length = Math.sqrt(delta_x * delta_x + delta_y * delta_y);
 		var tan_theta = delta_y/delta_x;
 		var theta = atan(delta_y,delta_x);
@@ -82,9 +84,16 @@ function paint_star(){
 		ctx.beginPath()
 		ctx.arc(this.x,this.y,1,0,Math.PI*2);
 		ctx.fill();
+		if(this.x < 0 || this.x > w || this.y < 0 || this.y > h){
+			this.x = random(w/2 - radius, w/2 + radius);
+			this.y = random(h/2 - radius, h/2 + radius);
+		}
 	}
 
-	for(var i = 0; i < 500; i++){
+
+
+
+	for(var i = 0; i < 1000; i++){
 		new Star();
 	}
 
