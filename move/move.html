@@ -2,34 +2,61 @@
 <html>
 <head>
 	<title></title>
+	<meta charset="UTF-8">
+	<style type="text/css">
+		body{
+			background-color: black;
+			text-align: center;
+		}
+		ul{
+			width: inherit;
+		}
+		li{
+			width: 200px;
+			height: 50px;
+			border-color: white;
+			border-radius: 10px;
+			border-style: solid;
+			background-color: #9ACD32;
+			margin: 10px auto;
+			line-height: 50px;
+		}
+		.star{
+
+		}
+		@keyframes starMove{
+			0%   {background: #FFFFFF;}
+			100% {background: red;top: 0px;width: 0px;height: 0px}
+		}
+	</style>
 </head>
 <body>
-	<p>Hello !</p>
-	<canvas id="myCanvas" width="1000" height="500"></canvas>
-        <script>
-        	var c=document.getElementById("myCanvas");
-			var ctx=c.getContext("2d");
-			var img=new Image()
-			img.src="images/bird.png"
-
-			const tempCanvas = document.createElement('canvas'); // 新建一个 canvas 作为缓存 canvas
-			const tempCtx = tempCanvas.getContext('2d');
-			tempCanvas.width = 1000; tempCanvas.height = 500; // 设置宽高
-
-			var i = 0, j = 0;
-			function showBird(){
-				i = (i+1)%36;
-				j = (j+5)%500;
-
-
-				tempCtx.clearRect(0,0,1001,501)
-				tempCtx.drawImage(img,0,parseInt(i/12)*60,86,60,j,0,86,60);
-				ctx.clearRect(0,0,1001,501)
-				ctx.drawImage(tempCanvas,0,0)
-				window.requestAnimationFrame(showBird);
-			}
-			
-			//img.onload = showBird
-        </script>
+	<ul style="list-style-type: none">
+		<li>打怪</li>
+		<li>种田</li>
+		<li>钓鱼</li>
+		<li>牧场</li>
+		<li>采集</li>
+		<li>拍卖</li>
+		<li>个人属性</li>
+		<li>背包</li>
+	</ul>
+    <script type="text/javascript">
+    	var body = document.getElementsByTagName('body')[0];
+    	const width = document.documentElement.clientWidth;
+    	const height = document.documentElement.clientHeight;
+		for (var i = 0; i <= 500; i++) {
+			var star = document.createElement('div');
+			star.style.width = '3px';
+			star.style.height = '3px';
+			star.style.backgroundColor = 'white';
+			star.style.position = 'absolute';
+			star.style.animation = 'starMove '+Math.round(Math.random()*10+20)+'s '+Math.round(Math.random()*100)+'s ease infinite';
+			star.style.left = Math.round(Math.random()*width) + 'px';
+			star.style.top = Math.round(Math.random()*10)+height-100 + 'px';
+			star.style.zIndex = -1;
+			body.appendChild(star);
+		}
+    </script>
 </body>
 </html>
